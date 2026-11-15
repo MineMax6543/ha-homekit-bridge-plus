@@ -1,3 +1,5 @@
+<img src="custom_components/homekit_plus/brand/icon.png" alt="HomeKit Bridge Plus icon" width="96" align="right">
+
 # HomeKit Bridge Plus
 
 A Home Assistant custom integration that exposes entities to Apple HomeKit, like the
@@ -24,19 +26,21 @@ from the UI.
 
 ## Installation
 
-**HACS (recommended)**
+**Home Assistant Marketplace (2026.11 and newer)**
 
-1. HACS → ⋮ (top right) → **Custom repositories**.
-2. Repository `https://github.com/MineMax6543/HomeKit-Bridge`, type **Integration** → **Add**.
-3. Search for **HomeKit Bridge Plus** in HACS → **Download**.
-4. Restart Home Assistant.
+1. **Settings → Marketplace**, then **Add from link** (top right).
+2. GitHub link: `MineMax6543/HomeKit-Bridge` → **Add**.
+3. Open **HomeKit Bridge Plus** in the list and install it. The Marketplace continues straight
+   into the setup below, no restart needed for the first install.
 
-**Manual**
+Updates show up in Home Assistant as an update entity, like any other update.
 
-1. Copy `custom_components/homekit_plus` into your Home Assistant `config/custom_components/`.
-2. Restart Home Assistant.
+**Older Home Assistant (2026.10 and earlier)**: add the same repository in HACS under
+⋮ → **Custom repositories** (type *Integration*), download it and restart.
 
-**Then**
+**Manual**: copy `custom_components/homekit_plus` into `config/custom_components/` and restart.
+
+**Setup**
 
 1. **Settings → Devices & services → Add integration → HomeKit Bridge Plus**.
    Choose **Bridge** (many entities, paired once) or **Accessory** (one entity paired on
@@ -123,3 +127,9 @@ re-pairing in the Home app.
   accessory (room/scene assignments for that accessory are lost). Changing features is fine.
 * Pairing data lives in `.storage/homekit_plus.<entry_id>.state`. Deleting the integration
   removes it.
+
+## Disclaimer
+
+Not affiliated with or endorsed by Apple or Home Assistant. HomeKit and Apple Home are
+trademarks of Apple Inc. Like everything in the Marketplace, this is community code that
+Home Assistant does not test or audit.
