@@ -1,0 +1,7 @@
+unpair:
+  fields:
+    config_entry_id:
+      required: true
+      selector:
+        config_entry:
+          integration: homekit_plus

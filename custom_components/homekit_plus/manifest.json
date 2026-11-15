@@ -1,0 +1,15 @@
+{
+  "domain": "homekit_plus",
+  "name": "HomeKit Bridge Plus",
+  "codeowners": [],
+  "config_flow": true,
+  "after_dependencies": ["camera"],
+  "dependencies": ["ffmpeg", "http", "network", "zeroconf"],
+  "documentation": "https://github.com/",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "loggers": ["pyhap"],
+  "requirements": ["HAP-python>=4.9.2", "PyQRCode>=1.2.1", "base36>=0.1.1"],
+  "single_config_entry": false,
+  "version": "0.2.0"
+}
