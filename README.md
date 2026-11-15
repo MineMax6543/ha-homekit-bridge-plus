@@ -29,7 +29,7 @@ from the UI.
 **Home Assistant Marketplace (2026.11 and newer)**
 
 1. **Settings → Marketplace**, then **Add from link** (top right).
-2. GitHub link: `MineMax6543/HomeKit-Bridge` → **Add**.
+2. GitHub link: `MineMax6543/HomeKit-Bridge-Plus` → **Add**.
 3. Open **HomeKit Bridge Plus** in the list and install it. The Marketplace continues straight
    into the setup below, no restart needed for the first install.
 

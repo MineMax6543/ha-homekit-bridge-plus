@@ -295,3 +295,21 @@ async def test_hap_roundtrip(hass: HomeAssistant) -> None:
     assert _service(_acc_by_entity(entry, "sensor.pm"), "AirQualitySensor").get_characteristic("AirQuality").value == 2
     assert _service(_acc_by_entity(entry, "sensor.co2"), "CarbonDioxideSensor").get_characteristic("CarbonDioxideDetected").value == 1
     assert _service(_acc_by_entity(entry, "cover.garage"), "GarageDoorOpener").get_characteristic("CurrentDoorState").value == 1
+
+
+@pytest.mark.parametrize(("on_value", "service"), [(1, "turn_on"), (0, "turn_off"), (True, "turn_on"), (False, "turn_off")])
+@pytest.mark.usefixtures("mock_network")
+async def test_light_tap_with_numeric_on(hass: HomeAssistant, on_value, service) -> None:
+    """iOS may send On as 1/0 when the tile icon is tapped (WLED report)."""
+    attrs = {"friendly_name": "WLED", "supported_color_modes": ["rgb"], "brightness": 200, "hs_color": [20, 80]}
+    hass.states.async_set("light.wled", "off" if on_value else "on", attrs)
+    entry = await _setup(hass, {"entities": ["light.wled"]})
+    acc = _acc_by_entity(entry, "light.wled")
+    on_char = _service(acc, "Lightbulb").get_characteristic("On")
+    calls = async_mock_service(hass, "light", service)
+    entry.runtime_data.driver.set_characteristics(
+        {"characteristics": [{"aid": acc.aid, "iid": acc.iid_manager.get_iid(on_char), "value": on_value}]},
+        ("127.0.0.1", 1234),
+    )
+    await hass.async_block_till_done()
+    assert len(calls) == 1

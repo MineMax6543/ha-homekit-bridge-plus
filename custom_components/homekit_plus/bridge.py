@@ -70,7 +70,7 @@ from .util import cleanup_name, resolve_type
 
 _LOGGER = logging.getLogger(__name__)
 
-VERSION = "0.2.2"
+VERSION = "0.2.3"
 
 
 class BridgeNotReady(Exception):

@@ -165,10 +165,23 @@ class Handler:
         self.hass.loop.call_soon_threadsafe(_arm)
 
     def on_setter(self, func: Callable[[dict[str, Any]], None]) -> Callable[[dict[str, Any]], None]:
-        """Wrap a service-level setter with debug logging."""
+        """Wrap a service-level setter: normalize values, log, call.
+
+        HAP-python hands service setters the raw values iOS sent. For bool
+        characteristics iOS sends either true/false or 1/0 (the Home app does
+        the latter e.g. when tapping a color light's tile), so make them real
+        bools before any handler compares them.
+        """
+        char_types = self.acc.driver.loader.char_types
 
         def _wrapped(values: dict[str, Any]) -> None:
             _LOGGER.debug("%s: HomeKit set %s", self.entity_id, values)
+            values = {
+                name: bool(value)
+                if char_types.get(name, {}).get("Format") == "bool" and value is not None
+                else value
+                for name, value in values.items()
+            }
             func(values)
 
         return _wrapped
