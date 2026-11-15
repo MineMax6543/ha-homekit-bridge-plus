@@ -346,7 +346,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
             else "none"
         )
         if self.accessory_mode:
-            menu = ["select_entities", "configure_entity", "bridge", "save"]
+            menu = ["select_entities", "configure_entity", "bridge"]
         else:
             menu = [
                 "select_entities",
@@ -354,7 +354,6 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
                 "configure_entity",
                 "groups",
                 "bridge",
-                "save",
             ]
         return self.async_show_menu(
             step_id="init",
@@ -366,7 +365,8 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
             },
         )
 
-    async def async_step_save(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+    def _async_apply(self) -> ConfigFlowResult:
+        """Save right away; the bridge reloads with the new options."""
         # Drop config of entities that are no longer exposed
         exposed = set(self._exposed())
         self.opts[CONF_ENTITY_CONFIG] = {
@@ -381,7 +381,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
         if self.accessory_mode:
             if user_input is not None:
                 self.opts[CONF_ENTITIES] = [user_input[CONF_ENTITIES]]
-                return await self.async_step_init()
+                return self._async_apply()
             current = (self.opts.get(CONF_ENTITIES) or [None])[0]
             schema = vol.Schema(
                 {
@@ -390,11 +390,25 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
                     ),
                 }
             )
-            return self.async_show_form(step_id="select_entities", data_schema=schema)
+            return self.async_show_form(
+                step_id="select_entities",
+                data_schema=schema,
+                description_placeholders={"indirect": ""},
+            )
 
         if user_input is not None:
             self.opts[CONF_ENTITIES] = user_input.get(CONF_ENTITIES, [])
-            return await self.async_step_init()
+            return self._async_apply()
+        explicit = set(self.opts.get(CONF_ENTITIES) or [])
+        indirect = [eid for eid in self._exposed() if eid not in explicit]
+        indirect_text = (
+            "\n\nAlso exposed through labels, areas, domains or combined accessories "
+            "(removing them here has no effect, add them to **Exclude** under "
+            "*Include by label / area / domain* instead):\n"
+            + "\n".join(f"- `{eid}`" for eid in indirect)
+            if indirect
+            else ""
+        )
         schema = vol.Schema(
             {
                 vol.Optional(
@@ -402,7 +416,11 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
                 ): EntitySelector(EntitySelectorConfig(domain=SUPPORTED_DOMAINS, multiple=True)),
             }
         )
-        return self.async_show_form(step_id="select_entities", data_schema=schema)
+        return self.async_show_form(
+            step_id="select_entities",
+            data_schema=schema,
+            description_placeholders={"indirect": indirect_text},
+        )
 
     async def async_step_filters(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         if user_input is not None:
@@ -413,7 +431,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
                 CONF_EXCLUDE_ENTITIES,
             ):
                 self.opts[key] = user_input.get(key, [])
-            return await self.async_step_init()
+            return self._async_apply()
         schema = vol.Schema(
             {
                 vol.Optional(
@@ -492,7 +510,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
         if user_input is not None:
             if user_input.get("reset"):
                 configs.pop(eid, None)
-                return await self.async_step_init()
+                return self._async_apply()
             new_type = user_input.get(CONF_TYPE)
             if new_type != resolve_type(eid, state, cfg, self.accessory_mode):
                 # Type changed -> type specific options no longer apply
@@ -575,7 +593,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
                     cfg[key] = value
             if CONF_FEATURES in user_input:
                 cfg[CONF_FEATURES] = user_input[CONF_FEATURES]  # [] is meaningful
-            return await self.async_step_init()
+            return self._async_apply()
 
         fields: dict[Any, Any] = {}
         if feature_choices:
@@ -740,7 +758,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
         if user_input is not None:
             if user_input.get("delete") and group is not None:
                 groups.remove(group)
-                return await self.async_step_init()
+                return self._async_apply()
             entities = user_input.get(CONF_GROUP_ENTITIES, [])
             others = {
                 eid
@@ -758,7 +776,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
                     groups.append(group)
                 group[CONF_GROUP_NAME] = user_input[CONF_GROUP_NAME].strip()
                 group[CONF_GROUP_ENTITIES] = entities
-                return await self.async_step_init()
+                return self._async_apply()
 
         current = user_input or group or {}
         fields: dict[Any, Any] = {
@@ -791,7 +809,7 @@ class HomeKitPlusOptionsFlow(OptionsFlow):
                 self.opts[CONF_NAME] = user_input[CONF_NAME]
                 self.opts[CONF_PORT] = port
                 self.opts[CONF_ADVERTISE_IP] = (user_input.get(CONF_ADVERTISE_IP) or "").strip()
-                return await self.async_step_init()
+                return self._async_apply()
         schema = vol.Schema(
             {
                 vol.Required(CONF_NAME, default=current.get(CONF_NAME, DEFAULT_NAME)): str,

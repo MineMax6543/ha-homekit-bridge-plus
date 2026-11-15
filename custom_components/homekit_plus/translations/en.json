@@ -37,19 +37,18 @@
     "step": {
       "init": {
         "title": "HomeKit Bridge Plus",
-        "description": "**{count}** entities exposed, **{groups}** combined accessories.\n\nSkipped at last start:\n{skipped}\n\nChanges are only applied when you choose **Save and apply**.",
+        "description": "**{count}** entities exposed, **{groups}** combined accessories.\n\nSkipped at last start:\n{skipped}\n\nEach change is applied as soon as you submit it; the bridge reloads and the Home app picks it up.",
         "menu_options": {
           "select_entities": "Choose entities",
           "filters": "Include by label / area / domain, and exclude",
           "configure_entity": "Configure an entity (type, name, features, battery…)",
           "groups": "Combined accessories (several entities in one tile)",
-          "bridge": "Bridge settings",
-          "save": "Save and apply"
+          "bridge": "Bridge settings"
         }
       },
       "select_entities": {
         "title": "Choose entities",
-        "description": "Entities chosen here are always exposed.",
+        "description": "Entities chosen here are always exposed. Remove one to take it out of HomeKit.{indirect}",
         "data": {
           "entities": "Entities"
         }

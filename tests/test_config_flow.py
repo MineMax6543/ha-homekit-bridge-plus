@@ -42,56 +42,38 @@ async def test_full_flow(hass: HomeAssistant) -> None:
     assert len(entry.data["pincode"]) == 10
     await hass.async_block_till_done()
 
-    # options: configure the unknown sensor as a light sensor
-    result = await hass.config_entries.options.async_init(entry.entry_id)
-    assert result["type"] is FlowResultType.MENU
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"next_step_id": "configure_entity"}
-    )
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"entity": "sensor.odd"}
-    )
-    assert result["step_id"] == "entity_type"
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"type": "light_sensor", "name": "Lux", "reset": False}
-    )
-    assert result["step_id"] == "entity_options"
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"low_battery_threshold": 20}
-    )
-    assert result["type"] is FlowResultType.MENU
+    async def options(*steps):
+        """Run one options dialog: menu choice, then each form submit."""
+        result = await hass.config_entries.options.async_init(entry.entry_id)
+        assert result["type"] is FlowResultType.MENU
+        for step in steps:
+            result = await hass.config_entries.options.async_configure(
+                result["flow_id"], step
+            )
+        assert result["type"] is FlowResultType.CREATE_ENTRY  # applied right away
+        await hass.async_block_till_done()
+        return result
 
+    # configure the unknown sensor as a light sensor
+    await options(
+        {"next_step_id": "configure_entity"},
+        {"entity": "sensor.odd"},
+        {"type": "light_sensor", "name": "Lux", "reset": False},
+        {"low_battery_threshold": 20},
+    )
     # light: only on/off
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"next_step_id": "configure_entity"}
+    await options(
+        {"next_step_id": "configure_entity"},
+        {"entity": "light.kitchen"},
+        {"type": "lightbulb", "reset": False},
+        {"features": [], "low_battery_threshold": 20},
     )
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"entity": "light.kitchen"}
-    )
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"type": "lightbulb", "reset": False}
-    )
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"features": [], "low_battery_threshold": 20}
-    )
-
     # combined accessory
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"next_step_id": "groups"}
+    await options(
+        {"next_step_id": "groups"},
+        {"group": "__new__"},
+        {"name": "Kitchen", "entities": ["light.kitchen", "sensor.odd"]},
     )
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"group": "__new__"}
-    )
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"name": "Kitchen", "entities": ["light.kitchen", "sensor.odd"]}
-    )
-    assert result["type"] is FlowResultType.MENU
-
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"next_step_id": "save"}
-    )
-    assert result["type"] is FlowResultType.CREATE_ENTRY
-    await hass.async_block_till_done()
 
     opts = entry.options
     assert opts["entity_config"]["sensor.odd"]["type"] == "light_sensor"

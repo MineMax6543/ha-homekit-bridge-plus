@@ -12,5 +12,5 @@
   "issue_tracker": "https://github.com/MineMax6543/HomeKit-Bridge/issues",
   "loggers": ["pyhap"],
   "requirements": ["HAP-python>=4.9.2", "PyQRCode>=1.2.1", "base36>=0.1.1"],
-  "version": "0.2.1"
+  "version": "0.2.2"
 }

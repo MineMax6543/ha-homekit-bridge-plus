@@ -53,8 +53,8 @@ You can run this alongside the built-in HomeKit Bridge, but use a different port
 
 ## Configuring
 
-Open the integration's **Configure** button. It is a menu, and nothing is applied until you
-pick **Save and apply** (the bridge then reloads; iOS picks up the changes on its own).
+Open the integration's **Configure** button and pick what to change. Each change is applied
+as soon as you submit it: the bridge reloads and the Home app picks it up on its own.
 
 * **Choose entities**: an explicit list.
 * **Include by label / area / domain**: e.g. create a label `HomeKit` and put it on any

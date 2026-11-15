@@ -309,9 +309,6 @@ async def test_accessory_mode_flow(hass: HomeAssistant) -> None:
         result["flow_id"],
         {"features": ["power", "inputs"], "sources": ["HDMI 2"], "low_battery_threshold": 20},
     )
-    result = await hass.config_entries.options.async_configure(
-        result["flow_id"], {"next_step_id": "save"}
-    )
     assert result["type"] is FlowResultType.CREATE_ENTRY
     await hass.async_block_till_done()
     acc = entry.runtime_data.root
