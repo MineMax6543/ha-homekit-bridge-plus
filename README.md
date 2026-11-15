@@ -24,13 +24,24 @@ from the UI.
 
 ## Installation
 
-1. Copy `custom_components/homekit_plus` into your Home Assistant `config/custom_components/`
-   (or add this repo to HACS as a custom repository).
+**HACS (recommended)**
+
+1. HACS → ⋮ (top right) → **Custom repositories**.
+2. Repository `https://github.com/MineMax6543/HomeKit-Bridge`, type **Integration** → **Add**.
+3. Search for **HomeKit Bridge Plus** in HACS → **Download**.
+4. Restart Home Assistant.
+
+**Manual**
+
+1. Copy `custom_components/homekit_plus` into your Home Assistant `config/custom_components/`.
 2. Restart Home Assistant.
-3. **Settings → Devices & services → Add integration → HomeKit Bridge Plus**.
+
+**Then**
+
+1. **Settings → Devices & services → Add integration → HomeKit Bridge Plus**.
    Choose **Bridge** (many entities, paired once) or **Accessory** (one entity paired on
    its own; required for TVs/receivers, recommended for cameras).
-4. A notification with a QR code and pairing PIN appears. Scan it in the Apple Home app
+2. A notification with a QR code and pairing PIN appears. Scan it in the Apple Home app
    (*Add Accessory*).
 
 You can run this alongside the built-in HomeKit Bridge, but use a different port
