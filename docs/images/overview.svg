@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" width="960" height="400" role="img" aria-label="Home Assistant entities such as lights, climate, sensors, TVs and cameras go into HomeKit Bridge Plus, where you choose what is exposed and how. It shows them in Apple Home on iPhone, iPad and Mac, to Siri and Apple Watch, and to automations on your home hub, and sends commands back.">
+  <style>
+    :root {
+      --bg: #ffffff; --card: #f4f5f7; --line: #d0d5dd; --text: #1d2939; --muted: #667085; --arrow: #98a2b3;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0d1117; --card: #161b22; --line: #30363d; --text: #e6edf3; --muted: #8b949e; --arrow: #6e7681; }
+    }
+    .bg { fill: var(--bg); }
+    .card { fill: var(--card); stroke: var(--line); stroke-width: 1.5; }
+    .t { fill: var(--text); font: 600 17px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .s { fill: var(--muted); font: 400 14px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .w { fill: #ffffff; font: 700 19px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .ws { fill: #ffffffd9; font: 400 13.5px system-ui, -apple-system, "Segoe UI", sans-serif; }
+    .a { stroke: var(--arrow); stroke-width: 2.5; fill: none; marker-end: url(#head); }
+    .al { fill: var(--muted); font: 600 12.5px system-ui, -apple-system, "Segoe UI", sans-serif; }
+  </style>
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff8a3d"/>
+      <stop offset="1" stop-color="#f4511e"/>
+    </linearGradient>
+    <marker id="head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#98a2b3"/>
+    </marker>
+  </defs>
+  <rect class="bg" width="960" height="400" rx="16"/>
+
+  <!-- Home Assistant side -->
+  <rect class="card" x="24" y="44" width="210" height="68" rx="12"/>
+  <text class="t" x="42" y="72">Lights &amp; switches</text>
+  <text class="s" x="42" y="94">brightness, color, outlets</text>
+
+  <rect class="card" x="24" y="124" width="210" height="68" rx="12"/>
+  <text class="t" x="42" y="152">Climate &amp; covers</text>
+  <text class="s" x="42" y="174">thermostats, blinds, fans</text>
+
+  <rect class="card" x="24" y="204" width="210" height="68" rx="12"/>
+  <text class="t" x="42" y="232">Sensors &amp; security</text>
+  <text class="s" x="42" y="254">motion, doors, locks, alarm</text>
+
+  <rect class="card" x="24" y="284" width="210" height="68" rx="12"/>
+  <text class="t" x="42" y="312">TVs &amp; cameras</text>
+  <text class="s" x="42" y="334">inputs, remote, live view</text>
+
+  <text class="s" x="24" y="384">your Home Assistant entities</text>
+
+  <!-- Arrows into Plus -->
+  <path class="a" d="M236 78 C262 78 262 160 300 160"/>
+  <path class="a" d="M236 158 C262 158 262 185 300 185"/>
+  <path class="a" d="M236 238 C262 238 262 215 300 215"/>
+  <path class="a" d="M236 318 C262 318 262 240 300 240"/>
+
+  <!-- Plus -->
+  <rect x="306" y="120" width="200" height="160" rx="16" fill="url(#brand)"/>
+  <text class="w" x="326" y="186">HomeKit</text>
+  <text class="w" x="326" y="210">Bridge Plus</text>
+  <text class="ws" x="326" y="242">you pick what shows</text>
+  <text class="ws" x="326" y="260">up, and how</text>
+
+  <!-- HomeKit link: both directions to every Apple card -->
+  <path class="a" style="marker-start: url(#head)" d="M512 170 C560 170 560 118 604 118"/>
+  <path class="a" style="marker-start: url(#head)" d="M512 200 H604"/>
+  <path class="a" style="marker-start: url(#head)" d="M512 230 C560 230 560 282 604 282"/>
+  <text class="al" x="526" y="98">HomeKit</text>
+  <text class="al" x="526" y="334">local network</text>
+
+  <!-- Apple side -->
+  <rect class="card" x="612" y="84" width="324" height="68" rx="12"/>
+  <text class="t" x="630" y="112">Home app</text>
+  <text class="s" x="630" y="134">iPhone, iPad, Mac, Control Center</text>
+
+  <rect class="card" x="612" y="166" width="324" height="68" rx="12"/>
+  <text class="t" x="630" y="194">Siri &amp; Apple Watch</text>
+  <text class="s" x="630" y="216">"Hey Siri, turn on the garden pump"</text>
+
+  <rect class="card" x="612" y="248" width="324" height="68" rx="12"/>
+  <text class="t" x="630" y="276">Scenes &amp; automations</text>
+  <text class="s" x="630" y="298">run on your Apple TV or HomePod</text>
+
+  <text class="s" x="612" y="384">→ Apple Home, the way you set it up</text>
+</svg>
