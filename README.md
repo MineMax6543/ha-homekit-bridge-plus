@@ -1,135 +1,166 @@
-<img src="custom_components/homekit_plus/brand/icon.png" alt="HomeKit Bridge Plus icon" width="96" align="right">
+<p align="center">
+  <img alt="HomeKit Bridge Plus" src="custom_components/homekit_plus/brand/icon@2x.png" width="160">
+</p>
 
-# HomeKit Bridge Plus
+<h1 align="center">HomeKit Bridge Plus</h1>
 
-A Home Assistant custom integration that exposes entities to Apple HomeKit, like the
-built-in **HomeKit Bridge**, but lets you pick exactly what is exposed and how, all
-from the UI.
+<p align="center">
+  Bring Home Assistant into Apple Home, exactly the way you want it.<br>
+  <a href="https://github.com/MineMax6543/HomeKit-Bridge-Plus/releases"><img alt="Release" src="https://img.shields.io/github/v/release/MineMax6543/HomeKit-Bridge-Plus"></a>
+  <a href="https://github.com/MineMax6543/HomeKit-Bridge-Plus"><img alt="Home Assistant Marketplace" src="https://img.shields.io/badge/Marketplace-custom-41BDF5"></a>
+</p>
 
-## What it adds compared to the built-in HomeKit Bridge
+---
 
-| | Built-in | Plus |
+HomeKit Bridge Plus exposes your Home Assistant entities to Apple Home, like the built-in
+**HomeKit Bridge**, but you decide **what** shows up and **how**: per entity, all from the UI,
+no YAML. Changes reach the Home app instantly in both directions.
+
+```mermaid
+flowchart LR
+    HA["🏠 Home Assistant<br/>your entities"]
+    P["🌉 HomeKit Bridge Plus"]
+    H["📱 Apple Home<br/>iPhone · Watch · Siri"]
+    HA -- "state changes" --> P
+    P -- "commands" --> HA
+    P <-- "HomeKit (local network)" --> H
+```
+
+## Setup
+
+1. **In Home Assistant (2026.11+):** *Settings → Marketplace → Add from link* → `MineMax6543/HomeKit-Bridge-Plus` → install **HomeKit Bridge Plus**. It goes straight into the setup, no restart needed.
+2. **Choose a mode:** **Bridge** (many entities, paired once) or **Accessory** (one entity on its own; needed for TVs, best for cameras).
+3. **In the Apple Home app:** *Add Accessory* and scan the QR code from the Home Assistant notification (or enter the PIN shown there).
+
+> **Tip:** on Home Assistant 2026.10 or older, add the repository in HACS instead (⋮ → *Custom repositories*, type *Integration*), download it and restart.
+> It runs fine next to the built-in HomeKit Bridge, just don't expose the same entity through both.
+
+## What it adds
+
+| | Built-in HomeKit Bridge | HomeKit Bridge Plus |
 |---|---|---|
-| Choose entities | include/exclude filters | explicit list **+** labels, areas, domains, excludes |
-| Auto-update when you label/move entities | – | ✅ bridge reloads by itself |
-| Accessory type per entity | limited (`type:` for switches in YAML) | any sensible type, in the UI (e.g. switch → light / outlet / fan / valve / sprinkler / **motion or contact sensor**) |
-| Choose which characteristics are exposed | – | ✅ e.g. light without color, fan without oscillation, blind without tilt, cover as open/close only |
-| Thermostat modes shown in HomeKit | all supported | ✅ choose (e.g. only Off/Heat) |
-| Alarm arm modes shown | YAML | ✅ UI |
-| Custom HomeKit name | YAML | ✅ UI |
-| Linked battery / humidity sensor | YAML | ✅ UI, plus low battery threshold |
-| Several entities in **one** accessory | – | ✅ "Combined accessories" |
-| Invert binary sensors | – | ✅ |
-| CO2 "detected" threshold | fixed | ✅ |
-| TV inputs shown in HomeKit | all | ✅ pick which |
-| Camera encoder / resolution / audio | YAML | ✅ UI |
+| 🎯 **Choosing entities** | include/exclude filters | explicit list **+** labels, areas, domains, excludes, auto-updates when you re-label |
+| 🔀 **Accessory type** | limited, YAML | any sensible type in the UI (switch → light, outlet, fan, valve, sprinkler, **motion or contact sensor** …) |
+| 🎛️ **Exposed features** | everything | pick per entity: light without color, fan without oscillation, blind without tilt, cover open/close only |
+| 🌡️ **Thermostat & alarm modes** | all / YAML | choose which modes Apple Home offers |
+| 🔋 **Linked sensors** | YAML | battery (with low threshold), humidity, motion, doorbell in the UI |
+| 🧩 **Several entities in one tile** | – | **Combined accessories** |
+| 📺 **TV inputs** | all | pick which inputs appear |
+| 📷 **Cameras** | YAML | encoder, resolution, frame rate, audio in the UI |
 
-## Installation
+## What you can expose
 
-**Home Assistant Marketplace (2026.11 and newer)**
-
-1. **Settings → Marketplace**, then **Add from link** (top right).
-2. GitHub link: `MineMax6543/HomeKit-Bridge-Plus` → **Add**.
-3. Open **HomeKit Bridge Plus** in the list and install it. The Marketplace continues straight
-   into the setup below, no restart needed for the first install.
-
-Updates show up in Home Assistant as an update entity, like any other update.
-
-**Older Home Assistant (2026.10 and earlier)**: add the same repository in HACS under
-⋮ → **Custom repositories** (type *Integration*), download it and restart.
-
-**Manual**: copy `custom_components/homekit_plus` into `config/custom_components/` and restart.
-
-**Setup**
-
-1. **Settings → Devices & services → Add integration → HomeKit Bridge Plus**.
-   Choose **Bridge** (many entities, paired once) or **Accessory** (one entity paired on
-   its own; required for TVs/receivers, recommended for cameras).
-2. A notification with a QR code and pairing PIN appears. Scan it in the Apple Home app
-   (*Add Accessory*).
-
-You can run this alongside the built-in HomeKit Bridge, but use a different port
-(default here is `21070`) and don't expose the same entity through both.
+| Area | Becomes in Apple Home |
+|---|---|
+| 💡 **Lights** | Light bulb with selectable brightness, color temperature and color, or switch, outlet, fan |
+| 🔌 **Switches & helpers** | Switch, outlet, light, fan, valve, sprinkler, shower, faucet, or any detection sensor |
+| 🌀 **Fans & humidifiers** | Fan with selectable speed / oscillation / direction, humidifier or dehumidifier |
+| 🪟 **Covers & valves** | Blind (position / tilt selectable), garage door, door, window, valve |
+| 🌡️ **Climate** | Thermostat with chosen modes and heat/cool range, water heater |
+| 🔐 **Security** | Lock, security system with chosen arm modes and code |
+| 📊 **Sensors** | Temperature, humidity, light, CO2, PM2.5, PM10, AQI, motion, occupancy, contact, leak, smoke, CO |
+| 🧍 **Presence** | Person or device tracker as occupancy / motion / contact (home = detected) |
+| 📺 **Media** | Television or receiver with inputs, volume and remote, or a simple switch |
+| 📷 **Cameras** | Live view, snapshots, audio, motion and doorbell |
+| ▶️ **Scripts, scenes, buttons** | Switch that resets itself after a press |
 
 ## Configuring
 
-Open the integration's **Configure** button and pick what to change. Each change is applied
+Open **Settings → Devices & services → HomeKit Bridge Plus → Configure**. Every change applies
 as soon as you submit it: the bridge reloads and the Home app picks it up on its own.
 
-* **Choose entities**: an explicit list.
-* **Include by label / area / domain**: e.g. create a label `HomeKit` and put it on any
-  entity or device. Hidden, disabled, config and diagnostic entities are skipped for these
-  automatic includes. **Exclude** always wins.
-* **Configure an entity**: name, accessory type, then which features are exposed and
-  linked battery/humidity sensors. Only features the entity actually supports are offered.
-* **Combined accessories**: put several entities in one HomeKit accessory (for example a
-  temperature + humidity + motion multi sensor, or a fan + its light).
-* **Bridge settings**: name, port, advertised IP.
-
-Sensors whose type can't be guessed (no `device_class`) are skipped until you pick a type
-under *Configure an entity*. The options menu lists what was skipped and why.
-
-### Supported domains → HomeKit types
-
-| Domain | Types |
+| Menu | What it does |
 |---|---|
-| light | Light bulb (brightness / color temp / color selectable), Switch, Outlet, Fan |
-| switch, input_boolean | Switch, Outlet, Light bulb, Fan, Valve, Sprinkler, Shower, Faucet, Motion/Occupancy/Contact/Leak/Smoke/CO sensor |
-| fan | Fan (speed / oscillation / direction selectable), Switch, Outlet, Light bulb |
-| cover | Window covering (position / tilt selectable), Garage door, Door, Window, Switch |
-| valve | Valve, Sprinkler, Shower, Faucet, Switch |
-| lock | Lock, Switch |
-| climate | Thermostat (modes, humidity, heat/cool range selectable), Switch |
-| alarm_control_panel | Security system (arm modes selectable, code) |
-| sensor | Temperature, Humidity, Light (lux), CO2, PM2.5, PM10, AQI |
-| binary_sensor | Motion, Occupancy, Contact, Leak, Smoke, Carbon monoxide |
-| person, device_tracker | Occupancy / Motion / Contact (home = detected) |
-| media_player | Television / Receiver (accessory mode: power, inputs, volume, mute, play/pause, remote keys selectable), Switch, Outlet |
-| camera | Camera (live stream via ffmpeg, snapshots, audio, linked motion sensor and doorbell) |
-| humidifier | Humidifier / dehumidifier (target humidity selectable, linked humidity sensor), Switch, Fan |
-| water_heater | Water heater (thermostat with Heat / optional Off), Switch |
-| vacuum, siren, remote, automation | Switch (vacuum also as Fan) |
-| script, scene, button, input_button | Switch / Outlet / Light bulb that resets itself after a press |
+| Choose entities | The explicit list of exposed entities |
+| Include by label / area / domain | Automatic includes (skips hidden, disabled, config and diagnostic entities) plus **Exclude**, which always wins |
+| Configure an entity | Name, accessory type, exposed features, linked sensors |
+| Combined accessories | Several entities in one HomeKit accessory, e.g. a multi sensor or a fan with its light |
+| Bridge settings | Name, port, advertised IP |
 
-### TVs
+## Good to know
 
-TVs and receivers only work in **accessory mode** (one entity per pairing, Apple doesn't
-show bridged TVs reliably). Pick which inputs appear in HomeKit. Play/pause and
-next/previous call the media player; the other remote keys (arrows, select, back, info…)
-fire the event `homekit_plus_tv_remote_key_pressed` with `entity_id` and `key_name`
-(`arrow_up`, `arrow_down`, `arrow_left`, `arrow_right`, `select`, `back`, `exit`,
-`information`, `rewind`, `fast_forward`) so you can map them in an automation.
+<details>
+<summary><b>🏷️ Expose things with a label</b></summary>
 
-### Cameras
+Create a label such as `HomeKit` and put it on any entity or device, then add the label under
+*Include by label / area / domain*. New or re-labelled entities show up in Apple Home by
+themselves.
+</details>
 
-Cameras stream with the ffmpeg binary Home Assistant already uses. Per camera you can set:
-a stream URL override (if the camera entity has no stream source), the encoder (`copy` avoids
-re-encoding and saves CPU if the source is H.264; `h264_v4l2m2m`/`h264_omx` for Raspberry Pi,
-`h264_qsv` for Intel), audio on/off, max resolution and frame rate, a motion sensor and a
-doorbell (binary sensor or event entity; the accessory then shows up as a video doorbell).
-Cameras work bridged, but accessory mode gives the most reliable live view.
-HomeKit Secure Video recording is not supported.
+<details>
+<summary><b>📺 TVs and receivers</b></summary>
 
-## Accessory mode
+TVs only work in **accessory mode** (Apple doesn't show bridged TVs reliably). Choose which
+inputs appear. Play/pause and next/previous control the media player; the other remote keys
+fire `homekit_plus_tv_remote_key_pressed` so you can map them yourself:
 
-One entity is paired directly (no bridge). The options menu then only shows *Choose entity*,
-*Configure the entity* and *Bridge settings*. Changing the entity in accessory mode means
-re-pairing in the Home app.
+```yaml
+triggers:
+  - trigger: event
+    event_type: homekit_plus_tv_remote_key_pressed
+    event_data:
+      entity_id: media_player.living_room_tv
+      key_name: arrow_up
+```
+Key names: `arrow_up`, `arrow_down`, `arrow_left`, `arrow_right`, `select`, `back`, `exit`,
+`information`, `rewind`, `fast_forward`.
+</details>
 
-## Services
+<details>
+<summary><b>📷 Cameras</b></summary>
 
-* `homekit_plus.unpair`: removes all pairings of a bridge so you can add it again.
+Cameras stream with the ffmpeg Home Assistant already ships. Per camera you can set a stream
+URL override, the encoder (`copy` saves CPU for H.264 sources, `h264_v4l2m2m`/`h264_omx` for
+Raspberry Pi, `h264_qsv` for Intel), audio, max resolution and frame rate. Link a motion sensor
+and a doorbell (binary sensor or event entity) and it shows up as a video doorbell.
+Bridged cameras work, accessory mode gives the most reliable live view.
+</details>
 
-## Notes
+<details>
+<summary><b>🧩 Accessory mode</b></summary>
 
-* A HomeKit bridge holds max. 150 accessories. Create a second bridge for more.
-* Changing an entity's **type** after pairing makes the Home app treat it as a new
-  accessory (room/scene assignments for that accessory are lost). Changing features is fine.
-* Pairing data lives in `.storage/homekit_plus.<entry_id>.state`. Deleting the integration
-  removes it.
+One entity is paired directly, without a bridge. The options then only show *Choose entity*,
+*Configure the entity* and *Bridge settings*. Changing the entity means pairing it again.
+</details>
 
-## Disclaimer
+<details>
+<summary><b>🔁 Pairing again</b></summary>
 
-Not affiliated with or endorsed by Apple or Home Assistant. HomeKit and Apple Home are
-trademarks of Apple Inc. Like everything in the Marketplace, this is community code that
-Home Assistant does not test or audit.
+`homekit_plus.unpair` removes all pairings of a bridge so you can add it to Apple Home again:
+
+```yaml
+action: homekit_plus.unpair
+data:
+  config_entry_id: <your bridge>
+```
+</details>
+
+<details>
+<summary><b>⚠️ Limits</b></summary>
+
+- A bridge holds max. **150 accessories**. Create a second bridge for more.
+- Changing an entity's **type** makes Apple Home see a new accessory (its room and scenes are lost). Changing features is fine.
+- HomeKit Secure Video recording is not supported.
+</details>
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| Accessories show "No Response" | Check that port **21070** (or yours) is reachable from your Apple TV / HomePod. With several network interfaces or Docker, set the **Advertised IP** in *Bridge settings*. |
+| An entity doesn't appear | Open *Configure*: the menu lists skipped entities and why. Sensors without a `device_class` need a type under *Configure an entity*. |
+| Removed entity is still in Apple Home | It's probably included by a label, area or domain. Add it to **Exclude**. |
+| "Port already in use" during setup | Another bridge (e.g. the built-in one) uses it. Pick a different port. |
+| WLED tile only goes dark, not off | You exposed a segment light. Turn off *Keep main light* in the WLED integration or expose the main light. |
+
+## Development
+
+```sh
+pip install pytest-homeassistant-custom-component HAP-python PyQRCode base36 ha-ffmpeg
+pytest
+```
+
+The tests run the integration inside a real Home Assistant instance and talk to it through
+the HomeKit protocol layer.
+
+<sub>Not affiliated with or endorsed by Apple or Home Assistant. HomeKit and Apple Home are trademarks of Apple Inc. Community code, not tested or audited by Home Assistant.</sub>
